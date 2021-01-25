@@ -104,7 +104,27 @@ async function createMysqlNode(
 
   sqlNode.mysqlImages___NODE = imageNodes.map(imageNode => imageNode.id);
 
-  await createNode(sqlNode);
+	// It's a post
+	if(sqlNode.hasOwnProperty('titles')){
+
+		// Titles
+		const titles = sqlNode.titles.split('@___@');
+		sqlNode.titles = titles.map(r => {
+			const [title, priority] = r.split('@@@@@');
+			return {
+				title, priority
+			};
+		});
+
+		// Recomendations
+		if(sqlNode.recommendations)
+			sqlNode.recommendations = sqlNode.recommendations.split(',');
+	}
+
+	/* console.log(sqlNode);
+	throw 'asd'; */
+
+	await createNode(sqlNode);
 }
 
 async function createMysqlNodes(
